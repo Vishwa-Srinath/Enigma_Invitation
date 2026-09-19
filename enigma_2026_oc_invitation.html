@@ -206,22 +206,95 @@
         const modalIcon = document.getElementById('modal-icon');
         const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
+        const acceptCountEl = document.getElementById('accept-count');
+
+        const ACCEPT_COUNT_KEY = 'enigma-2026-accept-count';
+        const STARTING_ACCEPT_COUNT = 128;
+        const SHARED_ACCEPT_API = ''; // Replace with your Google Apps Script / Supabase / Firebase URL when ready
+
+        function getLocalAcceptCount() {
+            try {
+                const saved = localStorage.getItem(ACCEPT_COUNT_KEY);
+                return saved ? Number(saved) : STARTING_ACCEPT_COUNT;
+            } catch (error) {
+                return STARTING_ACCEPT_COUNT;
+            }
+        }
+
+        function setLocalAcceptCount(count) {
+            try {
+                localStorage.setItem(ACCEPT_COUNT_KEY, String(count));
+            } catch (error) {
+                console.warn('Unable to save RSVP count locally:', error);
+            }
+        }
+
+        function updateAcceptCountDisplay(countValue) {
+            const value = Number(countValue || 0);
+            acceptCountEl.textContent = value.toLocaleString();
+        }
+
+        async function syncAcceptCount() {
+            if (!SHARED_ACCEPT_API) {
+                const current = getLocalAcceptCount() + 1;
+                setLocalAcceptCount(current);
+                updateAcceptCountDisplay(current);
+                return;
+            }
+
+            try {
+                const response = await fetch(SHARED_ACCEPT_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'increment' })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                }
+
+                const data = await response.json();
+                if (data && typeof data.count === 'number') {
+                    updateAcceptCountDisplay(data.count);
+                    return;
+                }
+            } catch (error) {
+                console.warn('Shared count unavailable, using local fallback:', error);
+                const current = getLocalAcceptCount() + 1;
+                setLocalAcceptCount(current);
+                updateAcceptCountDisplay(current);
+            }
+        }
+
+        function loadInitialCount() {
+            updateAcceptCountDisplay(getLocalAcceptCount());
+        }
+
+        loadInitialCount();
 
         // Document Open Logic
-        openSealBtn.addEventListener('click', () => {
-            // Change seal icon visually
-            sealIcon.classList.remove('fa-stamp');
-            sealIcon.classList.add('fa-check');
-            
-            // Slide up cover after a brief delay
+        function openEnvelope() {
+            if (documentCover.classList.contains('cover-slide-up')) {
+                return;
+            }
+
+            if (sealIcon) {
+                sealIcon.classList.remove('fa-stamp');
+                sealIcon.classList.add('fa-check');
+            }
+
             setTimeout(() => {
                 documentCover.classList.add('cover-slide-up');
-            }, 400);
-        });
+            }, 300);
+        }
+
+        openSealBtn.addEventListener('click', openEnvelope);
+        openSealBtn.addEventListener('touchstart', openEnvelope, { passive: true });
 
         // RSVP Logic
         function handleRSVP(isAttending) {
             if (isAttending) {
+                syncAcceptCount();
                 fireConfetti();
                 modalIcon.innerHTML = '<i class="fa-solid fa-champagne-glasses text-gold"></i>';
                 modalTitle.textContent = "Attendance Confirmed";
