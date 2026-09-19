@@ -32,11 +32,36 @@
         }
     </script>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            height: 100%;
             background-color: #e2e8f0;
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 20px 20px;
             color: #1e293b;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: clamp(8px, 2vw, 24px);
+        }
+
+        .invite-shell {
+            position: relative;
+            width: min(92vw, 760px);
+            min-height: calc(100vh - clamp(16px, 3vw, 48px));
+            overflow: hidden;
+            background-color: #fdfcf8;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 15px rgba(0,0,0,0.05);
         }
 
         .paper-texture {
@@ -44,11 +69,33 @@
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
+        #document-cover {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 40;
+            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1s ease-in-out;
+        }
+
         .cover-slide-up {
             transform: translateY(-100%);
             opacity: 0;
             pointer-events: none;
-            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1s ease-in-out;
+        }
+
+        #document-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - clamp(16px, 3vw, 48px));
+            padding: clamp(1rem, 3vw, 2.5rem);
         }
 
         .seal-pulse {
@@ -69,11 +116,55 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 0;
+            }
+
+            .invite-shell {
+                width: 100%;
+                max-width: 100%;
+                min-height: 100vh;
+            }
+
+            #document-cover {
+                min-height: 100vh;
+            }
+
+            #document-content {
+                min-height: 100vh;
+                padding: 1rem 0.9rem 1.1rem;
+            }
+
+            #document-cover h1 {
+                font-size: 2.6rem;
+            }
+
+            #document-cover p {
+                letter-spacing: 0.18em;
+                font-size: 0.68rem;
+            }
+
+            #document-content h1 {
+                font-size: 2.2rem;
+                line-height: 1.1;
+            }
+
+            #document-content h2 {
+                font-size: 1.5rem;
+            }
+
+            #document-content .prose {
+                font-size: 0.96rem;
+                line-height: 1.7;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-3 sm:p-8 font-sans selection:bg-gold selection:text-white">
 
-    <div class="relative w-full max-w-3xl sm:min-h-[850px] bg-paper shadow-document rounded-sm overflow-hidden flex flex-col">
+    <div class="invite-shell relative w-full max-w-3xl bg-paper shadow-document rounded-sm overflow-hidden flex flex-col">
         
         <!-- Interactive Cover (The "Envelope") -->
         <div id="document-cover" class="absolute inset-0 bg-navy z-40 flex flex-col items-center justify-center transition-all duration-1000">
@@ -96,7 +187,7 @@
         </div>
 
         <!-- Main Document Content -->
-        <div id="document-content" class="flex-grow flex flex-col paper-texture relative z-10 p-8 sm:p-12 md:p-16 fade-in-content">
+        <div id="document-content" class="flex-grow flex flex-col paper-texture relative z-10 p-6 sm:p-12 md:p-16 fade-in-content">
             
             <!-- Letterhead -->
             <div class="flex justify-between items-start border-b-2 border-gray-200 pb-4 sm:pb-6 mb-6 sm:mb-8">
@@ -173,11 +264,11 @@
             </div>
 
             <!-- Signature Corner -->
-            <div class="mt-6 sm:mt-8 flex justify-end pr-1 pb-1">
-                <div class="text-right leading-none transform translate-y-2">
-                    <p class="font-serif text-sm md:text-base italic text-navy">Vishwa Srinath</p>
-                    <p class="text-[8px] uppercase tracking-[0.18em] text-gray-500 mt-1">Co-chair</p>
-                    <p class="text-[7px] uppercase tracking-[0.24em] text-gold mt-1.5 font-semibold">ENIGMA 2026</p>
+            <div class="mt-5 sm:mt-7 flex justify-end pr-1 pb-1">
+                <div class="text-right leading-none -translate-y-0.5">
+                    <p class="font-serif text-xs sm:text-sm md:text-base italic text-navy">Vishwa Srinath</p>
+                    <p class="text-[7px] sm:text-[8px] uppercase tracking-[0.18em] text-gray-500 mt-1">Co-chair</p>
+                    <p class="text-[6px] sm:text-[7px] uppercase tracking-[0.24em] text-gold mt-1.5 font-semibold">ENIGMA 2026</p>
                 </div>
             </div>
         </div>
