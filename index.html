@@ -95,7 +95,7 @@
             display: flex;
             flex-direction: column;
             min-height: calc(100vh - clamp(16px, 3vw, 48px));
-            padding: clamp(1rem, 3vw, 2.5rem);
+            padding: calc(clamp(1rem, 3vw, 2.5rem) + 8px) clamp(1rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2.5rem);
         }
 
         .seal-pulse {
@@ -130,11 +130,12 @@
 
             #document-cover {
                 min-height: 100vh;
+                padding-top: 1.25rem;
             }
 
             #document-content {
                 min-height: 100vh;
-                padding: 1rem 0.9rem 1.1rem;
+                padding: 1.25rem 0.9rem 1.1rem;
             }
 
             #document-cover h1 {
