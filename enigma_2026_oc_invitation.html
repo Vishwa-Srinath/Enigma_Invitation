@@ -86,7 +86,7 @@
             </div>
 
             <!-- Interactive Seal -->
-            <button id="open-seal-btn" class="group relative flex flex-col items-center justify-center cursor-pointer outline-none">
+            <button id="open-seal-btn" onclick="openEnvelope()" class="group relative flex flex-col items-center justify-center cursor-pointer outline-none">
                 <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center seal-pulse shadow-lg group-hover:bg-goldHover transition-colors duration-300 z-10 relative">
                     <i class="fa-solid fa-stamp text-2xl text-navy"></i>
                 </div>
@@ -206,11 +206,10 @@
         const modalIcon = document.getElementById('modal-icon');
         const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
-        const acceptCountEl = document.getElementById('accept-count');
 
         const ACCEPT_COUNT_KEY = 'enigma-2026-accept-count';
         const STARTING_ACCEPT_COUNT = 128;
-        const SHARED_ACCEPT_API = ''; // Replace with your Google Apps Script / Supabase / Firebase URL when ready
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1gmfrxmtwDTJ24YcppPqyqdt9r2BpkSfZLAsRlkiaOSU/edit?usp=sharing';
 
         function getLocalAcceptCount() {
             try {
@@ -229,51 +228,34 @@
             }
         }
 
-        function updateAcceptCountDisplay(countValue) {
-            const value = Number(countValue || 0);
-            acceptCountEl.textContent = value.toLocaleString();
-        }
-
         async function syncAcceptCount() {
-            if (!SHARED_ACCEPT_API) {
-                const current = getLocalAcceptCount() + 1;
-                setLocalAcceptCount(current);
-                updateAcceptCountDisplay(current);
-                return;
-            }
-
             try {
-                const response = await fetch(SHARED_ACCEPT_API, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'increment' })
+                const response = await fetch(SHEET_URL, {
+                    method: 'GET',
+                    mode: 'cors'
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not OK');
+                    throw new Error('Unable to access Google Sheet');
                 }
 
-                const data = await response.json();
-                if (data && typeof data.count === 'number') {
-                    updateAcceptCountDisplay(data.count);
-                    return;
-                }
-            } catch (error) {
-                console.warn('Shared count unavailable, using local fallback:', error);
                 const current = getLocalAcceptCount() + 1;
                 setLocalAcceptCount(current);
-                updateAcceptCountDisplay(current);
+                return current;
+            } catch (error) {
+                console.warn('Google Sheet is not available, using local fallback:', error);
+                const current = getLocalAcceptCount() + 1;
+                setLocalAcceptCount(current);
+                return current;
             }
         }
 
-        function loadInitialCount() {
-            updateAcceptCountDisplay(getLocalAcceptCount());
-        }
-
-        loadInitialCount();
-
         // Document Open Logic
         function openEnvelope() {
+            if (!documentCover || !openSealBtn) {
+                return;
+            }
+
             if (documentCover.classList.contains('cover-slide-up')) {
                 return;
             }
@@ -288,8 +270,10 @@
             }, 300);
         }
 
-        openSealBtn.addEventListener('click', openEnvelope);
-        openSealBtn.addEventListener('touchstart', openEnvelope, { passive: true });
+        if (openSealBtn) {
+            openSealBtn.addEventListener('click', openEnvelope);
+            openSealBtn.addEventListener('touchstart', openEnvelope, { passive: true });
+        }
 
         // RSVP Logic
         function handleRSVP(isAttending) {
