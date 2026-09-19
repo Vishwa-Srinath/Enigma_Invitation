@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enigma 2026 - Formal OC Invitation</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        paper: '#fdfcf8',
+                        navy: '#0f172a',
+                        gold: '#c5a059',
+                        goldHover: '#b08d4b'
+                    },
+                    boxShadow: {
+                        'document': '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 15px rgba(0,0,0,0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #e2e8f0;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #1e293b;
+        }
+
+        .paper-texture {
+            background-color: #fdfcf8;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        .cover-slide-up {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1), opacity 1s ease-in-out;
+        }
+
+        .seal-pulse {
+            animation: pulse-seal 2s infinite;
+        }
+
+        @keyframes pulse-seal {
+            0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+        }
+
+        .fade-in-content {
+            opacity: 0;
+            animation: fadeIn 1s 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-8 font-sans selection:bg-gold selection:text-white">
+
+    <div class="relative w-full max-w-3xl aspect-[1/1.4] sm:aspect-auto sm:min-h-[850px] bg-paper shadow-document rounded-sm overflow-hidden flex flex-col">
+        
+        <!-- Interactive Cover (The "Envelope") -->
+        <div id="document-cover" class="absolute inset-0 bg-navy z-40 flex flex-col items-center justify-center transition-all duration-1000">
+            <!-- Decorative Border on Cover -->
+            <div class="absolute inset-4 border-2 border-gold/30 rounded-sm pointer-events-none"></div>
+            
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-serif text-white mb-2 tracking-wide">Enigma 2026</h1>
+                <p class="text-gold tracking-[0.3em] text-sm uppercase">Invitation</p>
+            </div>
+
+            <!-- Interactive Seal -->
+            <button id="open-seal-btn" onclick="openEnvelope()" class="group relative flex flex-col items-center justify-center cursor-pointer outline-none">
+                <div class="w-20 h-20 bg-gold rounded-full flex items-center justify-center seal-pulse shadow-lg group-hover:bg-goldHover transition-colors duration-300 z-10 relative">
+                    <i class="fa-solid fa-stamp text-2xl text-navy"></i>
+                </div>
+                <div class="absolute w-24 h-4 bg-black/20 blur-sm rounded-full -bottom-4"></div>
+                <span class="mt-6 text-sm text-gray-300 font-serif italic group-hover:text-white transition-colors duration-300">Click to break seal</span>
+            </button>
+        </div>
+
+        <!-- Main Document Content -->
+        <div id="document-content" class="flex-grow flex flex-col paper-texture relative z-10 p-8 sm:p-12 md:p-16 fade-in-content">
+            
+            <!-- Letterhead -->
+            <div class="flex justify-between items-start border-b-2 border-gray-200 pb-6 mb-8">
+                <div class="flex flex-col items-center group">
+                    <img src="society logo.png" alt="Society Logo" class="w-16 h-16 object-contain rounded border border-gray-300 bg-white p-1 shadow-sm group-hover:border-gold transition-colors duration-300" />
+                </div>
+
+                <div class="text-center px-4">
+                    <h2 class="font-serif text-2xl md:text-3xl font-bold text-navy">ENIGMA 2026</h2>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest mt-1">Organizing Committee</p>
+                </div>
+
+                <div class="flex flex-col items-center group">
+                    <img src="event logo.png" alt="Event Logo" class="w-16 h-16 object-contain scale-[1.45] rounded border border-gray-300 bg-white p-1 shadow-sm group-hover:border-gold transition-colors duration-300" />
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="text-center mb-10">
+                <h1 class="font-serif text-3xl md:text-4xl italic text-navy mb-3">You are cordially invited</h1>
+                <div class="w-16 h-0.5 bg-gold mx-auto"></div>
+            </div>
+
+            <!-- Body Text -->
+            <div class="prose prose-sm sm:prose-base max-w-none text-gray-700 leading-relaxed mb-10 text-justify">
+                <p class="mb-4">
+                    Dear leads and Organizing Committee Members,
+                </p>
+                <p class="mb-4">
+                    After weeks of late-night virtual meetings, relentless planning, and unparalleled dedication, it is finally time to step away from our screens. We want to personally extend our deepest gratitude for your hard work in bringing <a href="https://enigma-2026.web.app/" target="_blank" class="text-gold font-medium hover:underline">Enigma 2026</a> to life.
+                </p>
+                <p>
+                    Though some of us have only collaborated through digital means, it is time we gather physically to celebrate our collective success. Please join us at the Final Award Ceremony to witness the culmination of our efforts and to officially conclude this chapter with the honor it deserves.
+                </p>
+            </div>
+
+            <!-- Details Box -->
+            <div class="bg-gray-50 border border-gray-200 rounded p-6 mb-8 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-center space-x-4">
+                        <i class="fa-regular fa-calendar text-gold text-2xl w-8 text-center"></i>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Date</p>
+                            <p class="text-navy font-medium">27th Sept, 2026</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <i class="fa-regular fa-clock text-gold text-2xl w-8 text-center"></i>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Time</p>
+                            <p class="text-navy font-medium">2:00 PM Prompt</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <i class="fa-solid fa-location-dot text-gold text-2xl w-8 text-center"></i>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Venue</p>
+                            <p class="text-navy font-medium">ENTC 1 Hall</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+
+            <!-- RSVP Action Buttons -->
+            <div class="flex flex-col items-center space-y-3 mt-6">
+                <button onclick="handleRSVP(true)" class="px-6 py-2.5 bg-navy hover:bg-gray-800 text-white font-medium rounded shadow-md transition-all duration-300 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-envelope-open-text"></i> Accept Invitation
+                </button>
+                <button onclick="handleRSVP(false)" class="px-6 py-2 bg-transparent hover:bg-gray-100 text-gray-500 font-medium rounded transition-all duration-300 text-sm">
+                    Decline
+                </button>
+            </div>
+
+            <!-- Signature Corner -->
+            <div class="mt-8 flex justify-end pr-1 pb-1">
+                <div class="text-right leading-none transform translate-y-2">
+                    <p class="font-serif text-sm md:text-base italic text-navy">Vishwa Srinath</p>
+                    <p class="text-[8px] uppercase tracking-[0.18em] text-gray-500 mt-1">Co-chair</p>
+                    <p class="text-[7px] uppercase tracking-[0.24em] text-gold mt-1.5 font-semibold">ENIGMA 2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RSVP Response Modal -->
+    <div id="response-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-navy/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-paper border border-gray-200 shadow-2xl rounded p-8 max-w-sm w-full mx-4 text-center transform scale-95 transition-transform duration-300" id="modal-content">
+            <div id="modal-icon" class="text-4xl mb-4"></div>
+            <h3 id="modal-title" class="text-2xl font-serif font-bold text-navy mb-3"></h3>
+            <p id="modal-message" class="text-gray-600 mb-8 text-sm leading-relaxed"></p>
+            <button onclick="closeModal()" class="px-6 py-2 border border-navy text-navy hover:bg-navy hover:text-white rounded transition-colors w-full font-medium">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const documentCover = document.getElementById('document-cover');
+        const openSealBtn = document.getElementById('open-seal-btn');
+        const sealIcon = openSealBtn.querySelector('i');
+        
+        const modal = document.getElementById('response-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+
+        const ACCEPT_COUNT_KEY = 'enigma-2026-accept-count';
+        const STARTING_ACCEPT_COUNT = 128;
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1gmfrxmtwDTJ24YcppPqyqdt9r2BpkSfZLAsRlkiaOSU/edit?usp=sharing';
+
+        function getLocalAcceptCount() {
+            try {
+                const saved = localStorage.getItem(ACCEPT_COUNT_KEY);
+                return saved ? Number(saved) : STARTING_ACCEPT_COUNT;
+            } catch (error) {
+                return STARTING_ACCEPT_COUNT;
+            }
+        }
+
+        function setLocalAcceptCount(count) {
+            try {
+                localStorage.setItem(ACCEPT_COUNT_KEY, String(count));
+            } catch (error) {
+                console.warn('Unable to save RSVP count locally:', error);
+            }
+        }
+
+        async function syncAcceptCount() {
+            try {
+                const response = await fetch(SHEET_URL, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Unable to access Google Sheet');
+                }
+
+                const current = getLocalAcceptCount() + 1;
+                setLocalAcceptCount(current);
+                return current;
+            } catch (error) {
+                console.warn('Google Sheet is not available, using local fallback:', error);
+                const current = getLocalAcceptCount() + 1;
+                setLocalAcceptCount(current);
+                return current;
+            }
+        }
+
+        // Document Open Logic
+        function openEnvelope() {
+            if (!documentCover || !openSealBtn) {
+                return;
+            }
+
+            if (documentCover.classList.contains('cover-slide-up')) {
+                return;
+            }
+
+            if (sealIcon) {
+                sealIcon.classList.remove('fa-stamp');
+                sealIcon.classList.add('fa-check');
+            }
+
+            setTimeout(() => {
+                documentCover.classList.add('cover-slide-up');
+            }, 300);
+        }
+
+        if (openSealBtn) {
+            openSealBtn.addEventListener('click', openEnvelope);
+            openSealBtn.addEventListener('touchstart', openEnvelope, { passive: true });
+        }
+
+        // RSVP Logic
+        function handleRSVP(isAttending) {
+            if (isAttending) {
+                syncAcceptCount();
+                fireConfetti();
+                modalIcon.innerHTML = '<i class="fa-solid fa-champagne-glasses text-gold"></i>';
+                modalTitle.textContent = "Attendance Confirmed";
+                modalMessage.textContent = "We are thrilled to formally welcome you to the Final Award Ceremony. See you at the ENTC 1 Hall!";
+            } else {
+                modalIcon.innerHTML = '<i class="fa-solid fa-envelope text-gray-400"></i>';
+                modalTitle.textContent = "Regrets Received";
+                modalMessage.textContent = "Your regrets have been noted. Thank you for your immense contributions to Enigma 2026. We will celebrate your efforts in spirit!";
+            }
+            openModal();
+        }
+
+        // Elegant Confetti Function
+        function fireConfetti() {
+            var count = 200;
+            var defaults = {
+                origin: { y: 0.6 },
+                colors: ['#c5a059', '#0f172a', '#ffffff', '#e2e8f0'] // Gold, Navy, White, Silver
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+
+        // Modal interactions
+        function openModal() {
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
